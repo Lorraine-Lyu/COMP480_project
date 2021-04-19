@@ -10,14 +10,14 @@ class Rambo:
     # k is number of rows, 
     # b is the number of cells in each row
     # range is the size of each bloom filter
-    def __init__(self, k, b, range):
+    def __init__(self, k, b, range, hash):
         self.k = k
         self.b = b
         self.range = range
         self.assignments = []
-        self.tables = self.init_tables(k, b, range)
+        self.tables = self.init_tables(k, b, range, hash)
 
-    def init_tables(self, k, b, r):
+    def init_tables(self, k, b, r, hash):
         rtn = []
         for i in range(0, k):
             row = []
@@ -26,7 +26,7 @@ class Rambo:
                 # the first input is the expected number 
                 # of word to be inserted into each BF
                 # will figure out later.
-                cell.init_with_size(20, r)
+                cell.init_with_size(20, r, hash)
                 row.append(cell)
             rtn.append(row)
         return rtn

@@ -27,11 +27,13 @@ class BloomFilter():
 
     ## init with preset size
     ## used for q4.2
-    def init_with_size(self, num, size):
+    # directly pass in a list of hash function
+    # This was modified for project
+    def init_with_size(self, num, size, hash):
         self.expectedNumber = num
         self.size = size
         self.bf = bit.makeBitArray(self.size)
-        self.getHashFunctionsStr()
+        self.hash = hash 
 
     def computeSize(self, fp):
         self.size = round(self.expectedNumber * log(fp, 0.618))
