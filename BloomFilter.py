@@ -1,15 +1,18 @@
-import bit
-from math import log
-import numpy as np
-import Hash
 import random
+from math import log
+
+import numpy as np
+
+import bit
+import Hash
 
 seed = 13
 
-class BloomFilter():
+
+class BloomFilter:
 
     # python doesn't support multiple constructor
-    # so first init an empty instance and then 
+    # so first init an empty instance and then
     # call init functions respectively
     def __init__(self):
         self.expectedNumber = 0
@@ -33,7 +36,7 @@ class BloomFilter():
         self.expectedNumber = num
         self.size = size
         self.bf = bit.makeBitArray(self.size)
-        self.hash = hash 
+        self.hash = hash
 
     def computeSize(self, fp):
         self.size = round(self.expectedNumber * log(fp, 0.618))
@@ -49,12 +52,12 @@ class BloomFilter():
             f = Hash.hashFunctionFactory(self.size, m)
             functions.add(f)
         self.hash = functions
-    
+
     def getHashFunctionsStr(self):
         functions = set()
         random.seed(seed)
         members = set()
-        numHashFunction = round(self.size * 0.7/self.expectedNumber)
+        numHashFunction = round(self.size * 0.7 / self.expectedNumber)
         for i in range(0, numHashFunction):
             members.add(random.randint(1, 1000))
         for m in members:
@@ -80,4 +83,3 @@ class BloomFilter():
 
     def getBloomFilter(self):
         return self.bf
-
