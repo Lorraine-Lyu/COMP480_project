@@ -7,7 +7,7 @@ import helper as hp
 import rambo as rb
 from encoder import autoencoder
 
-pdf_names = []
+pdf_names = ["Unit_5_Problem_Set.pdf"]
 
 
 def prepare_pdf_set():
@@ -27,7 +27,8 @@ def get_traing_set(pdf_sets):
 
 
 def train_encoder(encoder, sets):
-    training_set = get_traing_set(sets)
+    training_set = list(get_traing_set(sets))
+    print(training_set)
     encoder.fit(training_set, training_set, epochs=10, shuffle=True)
 
 

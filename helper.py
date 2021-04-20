@@ -21,7 +21,7 @@ def pdf_extract(name):
     # creating a pdf file object
     raw = parser.from_file(name)
     content = raw["content"]
-    content = set(content.split)
+    content = set(content.split())
     return PDF_words_wrapper(name, content)
 
 

@@ -11,23 +11,21 @@ latent_dim = 32
 class Autoencoder(Model):
     def __init__(self, latent_dim):
         super(Autoencoder, self).__init__()
-        # input = Input(shape=(32,))
         self.latent_dim = latent_dim
         self.encoder = tf.keras.Sequential(
             [
-                layers.Dense(latent_dim, activation="relu", input_shape=(32,)),
+                layers.Dense(latent_dim, activation="relu", input_shape=(64,)),
             ]
         )
-        # self.decoder = tf.keras.Sequential([
-        #   layers.Dense(784, activation='sigmoid'),
-        #   layers.Reshape((64))
-        # ])
+        self.decoder = tf.keras.Sequential([
+          layers.Dense(784, activation='sigmoid'),
+          layers.Reshape((32,))
+        ])
 
     def call(self, x):
         encoded = self.encoder(x)
-        print(encoded)
-        # decoded = self.decoder(encoded)
-        return encoded
+        decoded = self.decoder(encoded)
+        return encoded, decoded
 
 
 autoencoder = Autoencoder(latent_dim)
