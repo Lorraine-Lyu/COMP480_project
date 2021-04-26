@@ -1,32 +1,47 @@
-import tensorflow as tf
-from sklearn.metrics import accuracy_score, precision_score, recall_score
-from sklearn.model_selection import train_test_split
-from tensorflow.keras import Input, layers, losses
-from tensorflow.keras.datasets import fashion_mnist
-from tensorflow.keras.models import Model
+from tensorflow import keras
+from tensorflow.keras import layers, regularizers
 
 latent_dim = 32
 
 
-class Autoencoder(Model):
+class Autoencoder(keras.models.Model):
     def __init__(self, latent_dim):
         super(Autoencoder, self).__init__()
         self.latent_dim = latent_dim
-        self.encoder = tf.keras.Sequential(
+        self.encoder = keras.Sequential(
             [
-                layers.Dense(latent_dim, activation="relu", input_shape=(64,)),
+                layers.Dense(256, activation="relu"),
+                layers.Dense(128, activation="relu"),
+                layers.Dense(64, activation="relu"),
+                layers.Dense(self.latent_dim, activation="relu", activity_regularizer=regularizers.l1(10e-3)),
             ]
         )
-        self.decoder = tf.keras.Sequential([
-          layers.Dense(784, activation='sigmoid'),
-          layers.Reshape((32,))
-        ])
+
+        self.decoder = keras.Sequential(
+            [
+                layers.Dense(64, activation="relu"),
+                layers.Dense(128, activation="relu"),
+                layers.Dense(256, activation="relu"),
+                layers.Dense(512, activation="relu"),
+            ]
+        )
 
     def call(self, x):
         encoded = self.encoder(x)
         decoded = self.decoder(encoded)
-        return encoded, decoded
+        return decoded
+
+    def encode(self, x):
+        return self.encoder(x)
+
+    def decode(self, x):
+        return self.decoder(x)
 
 
-autoencoder = Autoencoder(latent_dim)
-autoencoder.compile(optimizer="adam", loss=losses.MeanSquaredError())
+model = Autoencoder(latent_dim)
+model.build((None, 512))
+model.compile(
+    loss="mean_squared_error",
+    optimizer="adam",
+    metrics=["accuracy"],
+)
