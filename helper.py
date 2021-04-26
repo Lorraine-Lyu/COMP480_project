@@ -22,6 +22,7 @@ def pdf_extract(name):
     raw = parser.from_file(name)
     content = raw["content"]
     content = set(content.split())
+    print("parsed ", name, "total words ", len(content))
     return PDF_words_wrapper(name, content)
 
 

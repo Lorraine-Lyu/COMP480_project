@@ -84,7 +84,7 @@ callbacks = [
 
 def fit_model(train_dataset, model, val_dataset):
     history = model.fit(
-        train_dataset, epochs=40, callbacks=callbacks, validation_data=val_dataset
+        train_dataset, epochs=30, callbacks=callbacks, validation_data=val_dataset
     )
 
 def train_model(model):
@@ -93,4 +93,3 @@ def train_model(model):
     (train_dataset, val_dataset, test_dataset) = setup_training_set(ascii_list)
     print("setted up all datasets for training")
     fit_model(train_dataset, model, val_dataset)
-    print("finished training model")

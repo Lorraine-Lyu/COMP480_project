@@ -12,14 +12,15 @@ class Rambo:
     # k is number of rows,
     # b is the number of cells in each row
     # range is the size of each bloom filter
-    def __init__(self, k, b, range, hash):
+    def __init__(self, k, b, range, encoder):
         self.k = k
         self.b = b
         self.range = range
+        self.encoder = encoder
         self.assignments = []
-        self.tables = self.init_tables(k, b, range, hash)
+        self.tables = self.init_tables(k, b, range)
 
-    def init_tables(self, k, b, r, hash):
+    def init_tables(self, k, b, r):
         rtn = []
         for i in range(0, k):
             row = []
@@ -28,7 +29,8 @@ class Rambo:
                 # the first input is the expected number
                 # of word to be inserted into each BF
                 # will figure out later.
-                cell.init_with_size(20, r, hash)
+                cell.init(0.01, pow(2,15))
+                cell.set_encoder(self.encoder)
                 row.append(cell)
             rtn.append(row)
         return rtn
@@ -41,7 +43,7 @@ class Rambo:
             self.assignments.append(self.extract_assignment(nsets, i))
             for j in range(0, self.b):
                 for s in nsets[j]:
-                    self[i][j].insertSet(s)
+                    self.tables[i][j].insertSet(s.words)
 
     def extract_assignment(self, partition, row_index):
         r_names = []
@@ -54,20 +56,22 @@ class Rambo:
 
     # elem is a words
     def query(self, elem):
+        print("searching for datasets containing word ", elem)
         result = []
-        for r in self.tables:
+        for r in range(len(self.tables)):
             subset = self.query_row(r, elem)
             result.append(subset)
         if len(result) == 0:
             return None
         rtn = result[0]
         for i in range(1, len(result)):
-            rtn = rtn.intersect(result[i])
+            rtn = rtn.intersection(result[i])
         return rtn
 
     def query_row(self, row, elem):
         rtn = set()
         for j in range(0, self.b):
-            if self.tables[row][j].query(elem):
+            if self.tables[row][j].query_with_encoder(elem):
+                print(self.assignments[row][j], "contains the word", elem)
                 rtn = rtn.union(self.assignments[row][j])
         return rtn
