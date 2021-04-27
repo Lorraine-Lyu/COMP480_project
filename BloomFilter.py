@@ -21,7 +21,7 @@ def map_code_to_hash_val(code, r):
     sub_range_len = r/32
     # not sure about this value, should be the largest value of a tensor slot
     # in the encoded array
-    max_val = 128
+    max_val = 80
     for i in range(0, 32):
         if arr[i] > 0:
             pos = arr[i] * sub_range_len / max_val + i * sub_range_len

@@ -26,10 +26,7 @@ class Rambo:
             row = []
             for j in range(0, b):
                 cell = bf.BloomFilter()
-                # the first input is the expected number
-                # of word to be inserted into each BF
-                # will figure out later.
-                cell.init(0.01, pow(2,15))
+                cell.init(0.01, pow(2,20))
                 cell.set_encoder(self.encoder)
                 row.append(cell)
             rtn.append(row)

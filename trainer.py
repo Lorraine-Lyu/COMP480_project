@@ -84,7 +84,7 @@ callbacks = [
 
 def fit_model(train_dataset, model, val_dataset):
     history = model.fit(
-        train_dataset, epochs=30, callbacks=callbacks, validation_data=val_dataset
+        train_dataset, epochs=20, callbacks=callbacks, validation_data=val_dataset
     )
 
 def train_model(model):
