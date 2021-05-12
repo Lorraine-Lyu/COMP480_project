@@ -2,6 +2,7 @@ import urllib.request
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import BloomFilter as bf
 import re
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
@@ -22,26 +23,46 @@ def get_words(phrases):
             keywords.add(w)
     return list(keywords)
 
+def get_most_freq_words():
+    keywords = set()
+    for line in open('data/20k.txt','r'):
+        keywords.add(line.strip())
+    return list(keywords)
+
 def word_to_ascii(word):
     ascii_word = list(map(ord, word))
     padded_ascii = ascii_word + ([0] * (PAD_CONST - len(ascii_word)))
     return padded_ascii
 
+def test_collision_rate(model, samples, size):
+    query_set = samples[:500]
+    bitarray = bf.BloomFilter()
+    bitarray.init_with_size(2000, size)
+    bitarray.set_encoder(model)
+    fp = 0
+    for i in range(500, 2500):
+        bitarray.insert_with_encoder(samples[i])
+    for j in range(500):
+        if bitarray.query_with_encoder(samples[j]):
+            fp += 1
+    print("the fp rate for model is ", fp/500)
+
+
 def preprocess_words():
-    if not data_file.is_file():
-        if not data_dir.is_dir():
-            data_dir.mkdir(parents=True, exist_ok=True)
+    # if not data_file.is_file():
+    #     if not data_dir.is_dir():
+    #         data_dir.mkdir(parents=True, exist_ok=True)
 
-        with urllib.request.urlopen(AOL_URL) as data_url, data_file.open(
-            "w", encoding="utf-8"
-        ) as fd:
-            fd.write(data_url.read().decode("utf-8"))
+    #     with urllib.request.urlopen(AOL_URL) as data_url, data_file.open(
+    #         "w", encoding="utf-8"
+    #     ) as fd:
+    #         fd.write(data_url.read().decode("utf-8"))
 
-    data = pd.read_csv(data_file, sep="\t")
-    phrases = data.Query.dropna().unique().tolist()
+    # data = pd.read_csv(data_file, sep="\t")
+    # phrases = data.Query.dropna().unique().tolist()
 
-    word_set = get_words(phrases)
-
+    # word_set = get_words(phrases)
+    word_set = get_most_freq_words()
     phrases_ascii = np.array(list(map(word_to_ascii, word_set)))
     return phrases_ascii
 

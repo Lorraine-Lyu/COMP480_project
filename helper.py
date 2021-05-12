@@ -26,6 +26,7 @@ def pdf_extract(name):
     return PDF_words_wrapper(name, content)
 
 
+
 # converts a word into an int vector using ascii
 def word_vector_ascii(word):
     v = []
