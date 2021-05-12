@@ -6,6 +6,8 @@ import BloomFilter as bf
 import re
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
+import MinHash as mh
+import helper as hp
 
 #================ This section of code preprocesses the training data ===================
 
@@ -40,12 +42,31 @@ def test_collision_rate(model, samples, size):
     bitarray.init_with_size(2000, size)
     bitarray.set_encoder(model)
     fp = 0
-    for i in range(500, 2500):
+    for i in range(500, 4500):
         bitarray.insert_with_encoder(samples[i])
     for j in range(500):
         if bitarray.query_with_encoder(samples[j]):
             fp += 1
     print("the fp rate for model is ", fp/500)
+
+def test_LSH_property(model, samples, size):
+    query_set = samples[:500]
+    mhash = mh.Minhash(model, size)
+    jaccard_sum = 0
+    count = 0
+    for i in range(500, 9500):
+        mhash.insert(samples[i])
+    for j in range(500):
+        ref = hp.three_gram(samples[j])
+        res = mhash.get_similar_elements(samples[j])
+        for r in res:
+            three_gram = hp.three_gram(r)
+            jaccard_sum += hp.Jaccard(three_gram, ref)
+            count += 1
+    if count == 0:
+        print("no similar item found")
+        return
+    print("the mean jaccard similarity for model is ", jaccard_sum/count)
 
 
 def preprocess_words():
@@ -105,7 +126,7 @@ callbacks = [
 
 def fit_model(train_dataset, model, val_dataset):
     history = model.fit(
-        train_dataset, epochs=20, callbacks=callbacks, validation_data=val_dataset
+        train_dataset, epochs=50, callbacks=callbacks, validation_data=val_dataset
     )
 
 def train_model(model):

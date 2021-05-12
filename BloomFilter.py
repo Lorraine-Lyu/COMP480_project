@@ -52,7 +52,7 @@ class BloomFilter:
     ## used for q4.2
     # directly pass in a list of hash function
     # This was modified for project
-    def init_with_size(self, num, size, hash):
+    def init_with_size(self, num, size, hash=[]):
         self.expectedNumber = num
         self.size = size
         self.bf = bit.makeBitArray(self.size)

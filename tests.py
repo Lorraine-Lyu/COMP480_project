@@ -20,18 +20,16 @@ samples = trainer.get_most_freq_words()
 print("finished preparing test set")
 trainer.train_model(model)
 print("finished training autoencoder")
-print("test bit array size pow(2, 14)")
-trainer.test_collision_rate(model, samples, pow(2, 14))
-print("test bit array size pow(2, 18)")
-trainer.test_collision_rate(model, samples, pow(2, 18))
-print("test bit array size pow(2, 19)")
-trainer.test_collision_rate(model, samples, pow(2, 20))
-print("test bit array size pow(2, 21)")
-trainer.test_collision_rate(model, samples, pow(2, 21))
-print("test bit array size pow(2, 22)")
-trainer.test_collision_rate(model, samples, pow(2, 22))
-print("test bit array size pow(2, 23)")
-trainer.test_collision_rate(model, samples, pow(2, 23))
-print("test bit array size pow(2, 25)")
-trainer.test_collision_rate(model, samples, pow(2, 25))
+print("========testing fp rate of bloomfilter built with encoder===========")
+for j in range(14, 28):
+    print("test bit array size pow(2," , j, ")")
+    trainer.test_collision_rate(model, samples, pow(2, j))
+
+print("==========testing LSH property of hash function==========")
+
+for i in range(12, 24):
+    print("test LSH property pow(2,", i, ")")
+    trainer.test_LSH_property(model, samples, pow(2, i))
+
+#============= use the encoder as the hash function for LSH ==========
 
