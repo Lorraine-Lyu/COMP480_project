@@ -45,8 +45,8 @@ print("finished training autoencoder")
 # step3: initiate rambo, use the trained autoencoder
 # as the hash function.
 k = 6
-b = 4
-r = 10000
+b = int(len(all_pdfs)/2)
+r = pow(2, 17)
 # TODO: make sure encoder works as the hash function
 rb_table = rb.Rambo(k, b, r, model)
 rb_table.insert_sets(all_pdfs)
