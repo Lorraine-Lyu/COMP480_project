@@ -1,15 +1,17 @@
+import re
 import urllib.request
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
-import BloomFilter as bf
-import re
-from sklearn.model_selection import train_test_split
 import tensorflow as tf
-import MinHash as mh
-import helper as hp
+from sklearn.model_selection import train_test_split
 
-#================ This section of code preprocesses the training data ===================
+import BloomFilter as bf
+import helper as hp
+import MinHash as mh
+
+# ================ This section of code preprocesses the training data ===================
 
 AOL_URL = "http://www.cim.mcgill.ca/~dudek/206/Logs/AOL-user-ct-collection/user-ct-test-collection-01.txt"
 
@@ -21,20 +23,23 @@ PAD_CONST = 512
 def get_words(phrases):
     keywords = set()
     for s in phrases:
-        for w in re.findall(r'\w+', s) :
+        for w in re.findall(r"\w+", s):
             keywords.add(w)
     return list(keywords)
 
+
 def get_most_freq_words():
     keywords = set()
-    for line in open('data/20k.txt','r'):
+    for line in open("data/20k.txt", "r"):
         keywords.add(line.strip())
     return list(keywords)
+
 
 def word_to_ascii(word):
     ascii_word = list(map(ord, word))
     padded_ascii = ascii_word + ([0] * (PAD_CONST - len(ascii_word)))
     return padded_ascii
+
 
 def test_collision_rate(model, samples, size):
     query_set = samples[:500]
@@ -47,7 +52,8 @@ def test_collision_rate(model, samples, size):
     for j in range(500):
         if bitarray.query_with_encoder(samples[j]):
             fp += 1
-    print("the fp rate for model is ", fp/500)
+    print("the fp rate for model is ", fp / 500)
+
 
 def test_LSH_property(model, samples, size):
     query_set = samples[:500]
@@ -66,7 +72,7 @@ def test_LSH_property(model, samples, size):
     if count == 0:
         print("no similar item found")
         return
-    print("the mean jaccard similarity for model is ", jaccard_sum/count)
+    print("the mean jaccard similarity for model is ", jaccard_sum / count)
 
 
 def preprocess_words():
@@ -87,7 +93,9 @@ def preprocess_words():
     phrases_ascii = np.array(list(map(word_to_ascii, word_set)))
     return phrases_ascii
 
-#=================== The block below sets up the traning sets ========================
+
+# =================== The block below sets up the traning sets ========================
+
 
 def setup_training_set(phrases_ascii):
     X_train, X_test, y_train, y_test = train_test_split(
@@ -111,7 +119,8 @@ def setup_training_set(phrases_ascii):
 
     return (train_dataset, val_dataset, test_dataset)
 
-#=============The section below trains the autoencoder========================
+
+# =============The section below trains the autoencoder========================
 callbacks = [
     tf.keras.callbacks.EarlyStopping(
         monitor="val_loss", mode="min", patience=10, verbose=1
@@ -124,10 +133,12 @@ callbacks = [
     ),
 ]
 
+
 def fit_model(train_dataset, model, val_dataset):
     history = model.fit(
         train_dataset, epochs=50, callbacks=callbacks, validation_data=val_dataset
     )
+
 
 def train_model(model):
     ascii_list = preprocess_words()

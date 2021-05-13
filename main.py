@@ -1,16 +1,15 @@
 import csv
+import os
 import random
 
 import pandas as pd
 
 import helper as hp
 import rambo as rb
-from encoder import model
 import trainer
+from encoder import model
 
-import os
-
-#pdf_names = ["Unit_5_Problem_Set.pdf"]
+# pdf_names = ["Unit_5_Problem_Set.pdf"]
 
 
 def prepare_pdf_set():
@@ -45,7 +44,7 @@ print("finished training autoencoder")
 # step3: initiate rambo, use the trained autoencoder
 # as the hash function.
 k = 6
-b = int(len(all_pdfs)/2)
+b = int(len(all_pdfs) / 2)
 r = pow(2, 17)
 # TODO: make sure encoder works as the hash function
 rb_table = rb.Rambo(k, b, r, model)
