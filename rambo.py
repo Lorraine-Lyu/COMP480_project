@@ -26,7 +26,7 @@ class Rambo:
             row = []
             for j in range(0, b):
                 cell = bf.BloomFilter()
-                cell.init(0.01, pow(2,20))
+                cell.init(0.01, self.range)
                 cell.set_encoder(self.encoder)
                 row.append(cell)
             rtn.append(row)
@@ -51,7 +51,7 @@ class Rambo:
             r_names.append(cell_names)
         return r_names
 
-    # elem is a words
+    # elem is a word
     def query(self, elem):
         print("searching for datasets containing word ", elem)
         result = []
@@ -69,6 +69,6 @@ class Rambo:
         rtn = set()
         for j in range(0, self.b):
             if self.tables[row][j].query_with_encoder(elem):
-                print(self.assignments[row][j], "contains the word", elem)
+                # print(self.assignments[row][j], "contains the word", elem)
                 rtn = rtn.union(self.assignments[row][j])
         return rtn

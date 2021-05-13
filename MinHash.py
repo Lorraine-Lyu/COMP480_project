@@ -20,7 +20,7 @@ def map_code_to_hash_val(code, r):
         if arr[i] > 0:
             pos = arr[i] * sub_range_len / max_val + i * sub_range_len
 #             pos = pos % sub_range_len
-            rtn.append(int(pos))
+            rtn.append(int(pos) % r)
     return rtn
 
 
@@ -31,7 +31,7 @@ class Minhash:
         self.size = size
 
     def insert(self, elem):
-        code = self.encoder.encode(tf.convert_to_tensor([(trainer.word_to_ascii(elem))]))
+        code = self.encoder.encoder(tf.convert_to_tensor([(trainer.word_to_ascii(elem))]))
         positions = map_code_to_hash_val(code, self.size)
         self.table[tuple(positions)].add(elem)
 
@@ -44,6 +44,6 @@ class Minhash:
             return False
 
     def get_similar_elements(self, elem):
-        code = self.encoder.encode(tf.convert_to_tensor([(trainer.word_to_ascii(elem))]))
+        code = self.encoder.encoder(tf.convert_to_tensor([(trainer.word_to_ascii(elem))]))
         positions = map_code_to_hash_val(code, self.size)
         return self.table[tuple(positions)]

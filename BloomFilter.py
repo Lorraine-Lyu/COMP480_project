@@ -21,7 +21,7 @@ def map_code_to_hash_val(code, r):
     sub_range_len = r/32
     # not sure about this value, should be the largest value of a tensor slot
     # in the encoded array
-    max_val = 80
+    max_val = 100
     for i in range(0, 32):
         if arr[i] > 0:
             pos = arr[i] * sub_range_len / max_val + i * sub_range_len
@@ -95,13 +95,13 @@ class BloomFilter:
 
 
     def insert_with_encoder(self, elem):
-        code = self.encoder.encode(tf.convert_to_tensor([(trainer.word_to_ascii(elem))]))
+        code = self.encoder.encoder(tf.convert_to_tensor([(trainer.word_to_ascii(elem))]))
         positions = map_code_to_hash_val(code, self.size)
         for pos in positions:
             bit.setBit(self.bf, pos)
 
     def query_with_encoder(self, elem):
-        code = self.encoder.encode(tf.convert_to_tensor([(trainer.word_to_ascii(elem))]))
+        code = self.encoder.encoder(tf.convert_to_tensor([(trainer.word_to_ascii(elem))]))
         positions = map_code_to_hash_val(code, self.size)
         for pos in positions:
             if not bit.testBit(self.bf, pos):

@@ -39,10 +39,10 @@ def word_to_ascii(word):
 def test_collision_rate(model, samples, size):
     query_set = samples[:500]
     bitarray = bf.BloomFilter()
-    bitarray.init_with_size(2000, size)
+    bitarray.init_with_size(4000, size)
     bitarray.set_encoder(model)
     fp = 0
-    for i in range(500, 4500):
+    for i in range(500, 2500):
         bitarray.insert_with_encoder(samples[i])
     for j in range(500):
         if bitarray.query_with_encoder(samples[j]):

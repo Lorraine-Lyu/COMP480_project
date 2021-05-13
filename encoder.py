@@ -14,7 +14,7 @@ class Autoencoder(keras.models.Model):
                 layers.Dense(128, activation="relu"),
                 layers.Dense(64, activation="relu"),
                 layers.Dense(self.latent_dim, activation="relu")
-                # layers.Dense(self.latent_dim, activation="relu", activity_regularizer=regularizers.l1(10e-3)),
+                #layers.Dense(self.latent_dim, activation="relu", activity_regularizer=regularizers.l1(10e-3)),
             ]
         )
 
